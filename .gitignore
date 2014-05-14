@@ -1,0 +1,29 @@
+# System objects
+[Tt]humbs.db
+.DS_Store
+._.Trashes
+
+# Files
+# Note that these patterns apply only to
+# this folder, use **.abc to match across
+# path separators
+*.sln
+*.pdb
+*.pidb
+*.suo
+*.csproj
+*.unityproj
+*.booproj
+*.unityprc
+*.userprefs
+**.orig
+
+# Directories
+[Pp]roject[Ss]ettings/
+[Tt]emp/
+[Ll]ibrary/
+[Oo]bj/
+
+[Bb]uild[s]/
+[Bb]in/
+
