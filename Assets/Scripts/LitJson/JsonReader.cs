@@ -239,9 +239,24 @@ public class JsonReader {
 			Value = natural;
 			return;
 		}
+		ulong unsignednatural;
+		if (ulong.TryParse(number, out unsignednatural)) {
+			Token = JsonToken.Natural;
+			Value = unsignednatural;
+			return;
+		}
+		decimal decimalreal;
+		if (Decimal.TryParse(number, out decimalreal)) {
+			Token = JsonToken.Real;
+			Value = decimalreal;
+
+			return;
+		}
 		// Shouldn't happen, but just in case, return something
 		Token = JsonToken.Natural;
 		Value = 0;
+
+		throw new JsonException(string.Format("Failed to parse number '{0}'", number));
 	}
 
 	private void ProcessSymbol() {

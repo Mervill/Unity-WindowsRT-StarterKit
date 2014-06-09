@@ -198,6 +198,9 @@ public class JsonMapper {
 			if (pdata.Alias != null) {
 				data.Properties.Add(pdata.Alias, pdata);
 			} else {
+				if (data.Properties.ContainsKey(pinfo.Name)) {
+					throw new JsonException(string.Format("'{0}' already contains the property or alias name '{1}'", type, pinfo.Name));
+				}
 				data.Properties.Add(pinfo.Name, pdata);
 			}
 		}
@@ -235,6 +238,9 @@ public class JsonMapper {
 			if (pdata.Alias != null) {
 				data.Properties.Add(pdata.Alias, pdata);
 			} else {
+				if (data.Properties.ContainsKey(finfo.Name)) {
+					throw new JsonException(string.Format("'{0}' already contains the field or alias name '{1}'", type, finfo.Name));
+				}
 				data.Properties.Add(finfo.Name, pdata);
 			}
 		}
@@ -300,7 +306,13 @@ public class JsonMapper {
 		Type underlyingType = Nullable.GetUnderlyingType(instType);
 		Type valueType = underlyingType ?? instType;
 		if (reader.Token == JsonToken.Null) {
+			#if JSON_WINRT || (UNITY_METRO && !UNITY_EDITOR)
+			/* IsClass is made a getter here as a comparability
+			patch for WinRT build targets, see Platform.cs */
 			if (instType.IsClass() || underlyingType != null) {
+			#else
+			if (instType.IsClass || underlyingType != null) {
+			#endif
 				return null;
 			}
 			throw new JsonException(string.Format("Can't assign null to an instance of type {0}", instType));
@@ -320,7 +332,13 @@ public class JsonMapper {
 				return importer(reader.Value);
 			}
 			// Maybe it's an enum
+			#if JSON_WINRT || (UNITY_METRO && !UNITY_EDITOR)
+			/* IsClass is made a getter here as a comparability
+			patch for WinRT build targets, see Platform.cs */
 			if (valueType.IsEnum()) {
+			#else
+			if (valueType.IsEnum) {
+			#endif
 				return Enum.ToObject(valueType, reader.Value);
 			}
 			// Try using an implicit conversion operator
@@ -528,13 +546,13 @@ public class JsonMapper {
 			writer.Write(Convert.ToInt64((uint)obj));
 		};
 		baseExportTable[typeof(ulong)] = delegate(object obj, JsonWriter writer) {
-			writer.Write(Convert.ToInt64((ulong)obj));
+			writer.Write(Convert.ToUInt64((ulong)obj));
 		};
 		baseExportTable[typeof(float)] = delegate(object obj, JsonWriter writer) {
 			writer.Write(Convert.ToDouble((float)obj));
 		};
 		baseExportTable[typeof(decimal)] = delegate(object obj, JsonWriter writer) {
-			writer.Write(Convert.ToDouble((decimal)obj));
+			writer.Write(Convert.ToDecimal((decimal)obj));
 		};
 		baseExportTable[typeof(DateTime)] = delegate(object obj, JsonWriter writer) {
 			writer.Write(Convert.ToString((DateTime)obj, datetimeFormat));

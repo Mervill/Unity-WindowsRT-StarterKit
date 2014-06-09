@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#if !JSON_STANDALONE
+
+using UnityEngine;
 using System;
 using System.Collections;
 
@@ -138,3 +140,4 @@ namespace LitJson {
 
 	}
 }
+#endif

@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Linq;
 using System.IO;
 
-#if UNITY_METRO && !UNITY_EDITOR
+#if JSON_WINRT || (UNITY_METRO && !UNITY_EDITOR)
 namespace LitJson {
 
 	public interface IOrderedDictionary : IDictionary, ICollection, IEnumerable {
@@ -18,7 +18,7 @@ namespace LitJson {
 		void RemoveAt (int index);
 	}
 	
-	public static class UnityPlatform {
+	public static class Platform {
 
 		public static Type GetInterface(this Type _type,string name){
 			foreach(Type t in _type.GetTypeInfo().ImplementedInterfaces){
@@ -91,23 +91,4 @@ namespace LitJson {
 		
 	}
 }
-#else
-
-namespace LitJson {
-
-	public static class UnityPlatform {
-		
-		// Replace with extention properties if they are ever added to .net
-		public static bool IsClass(this Type _type){
-			return _type.IsClass;
-		}
-		
-		// Replace with extention properties if they are ever added to .net
-		public static bool IsEnum(this Type _type){
-			return _type.IsEnum;
-		}
-		
-	}
-}
-
 #endif

@@ -246,7 +246,7 @@ public class JsonWriter {
 	public void Write(double number) {
 		DoValidation(Condition.Value);
 		PutNewline();
-		string str = Convert.ToString(number, numberFormat);
+		string str = number.ToString("R", numberFormat);
 		Put(str);
 		if (str.IndexOf('.') == -1 && str.IndexOf('E') == -1) {
 			TextWriter.Write(".0");
@@ -254,7 +254,21 @@ public class JsonWriter {
 		context.ExpectingValue = false;
 	}
 
+	public void Write(decimal number) {
+		DoValidation(Condition.Value);
+		PutNewline();
+		Put(Convert.ToString(number, numberFormat));
+		context.ExpectingValue = false;
+	}
+
 	public void Write(long number) {
+		DoValidation(Condition.Value);
+		PutNewline();
+		Put(Convert.ToString(number, numberFormat));
+		context.ExpectingValue = false;
+	}
+
+	public void Write(ulong number) {
 		DoValidation(Condition.Value);
 		PutNewline();
 		Put(Convert.ToString(number, numberFormat));
